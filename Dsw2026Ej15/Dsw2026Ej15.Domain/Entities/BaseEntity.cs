@@ -4,8 +4,13 @@ using System.Text;
 
 namespace Dsw2026Ej15.Domain.Entities
 {
-    internal class BaseEntity
+    public abstract class BaseEntity
     {
-        private Guid Id;
+        public Guid Id { get; private set; }
+
+        protected BaseEntity(Guid? id = null)
+        {
+            Id = id ?? Guid.NewGuid();
+        }
     }
 }
