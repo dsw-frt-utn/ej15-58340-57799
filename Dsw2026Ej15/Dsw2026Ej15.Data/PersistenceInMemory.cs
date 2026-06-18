@@ -37,7 +37,22 @@ namespace Dsw2026Ej15.Data
 
         public Doctor? GetDoctorActiveById(Guid id)
         {
-            return _doctors.Where(d => d.Id == id && d.IsActive == true).ToList();
+            return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive == true);
+        }
+
+        public Doctor? BajaLogicaDoctorById(Guid id)
+        {
+            var doctor = GetDoctorActiveById(id);
+
+            if (doctor == null)
+            {
+                return null;
+            }
+            else
+            {
+                doctor.IsActive = false;
+                return doctor;
+            }
         }
 
         private void LoadSpecialities()
