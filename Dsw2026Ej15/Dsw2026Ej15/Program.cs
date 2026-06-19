@@ -1,3 +1,4 @@
+using Dsw2026Ej15.Api.Middleware;
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Domain.Interfaces;
 
@@ -17,6 +18,10 @@ namespace Dsw2026Ej15
 
             var app = builder.Build();
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+            app.UseHttpsRedirection();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -24,7 +29,6 @@ namespace Dsw2026Ej15
                 app.MapSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

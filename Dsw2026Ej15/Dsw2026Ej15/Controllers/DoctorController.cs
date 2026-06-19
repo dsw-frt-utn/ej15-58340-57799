@@ -22,26 +22,21 @@ namespace Dsw2026Ej15.Controllers
         [HttpPost] //indica que este método se ejecutará cuando se realice una solicitud HTTP POST a la ruta "/Doctor/CreateDoctor"
         public async Task<IActionResult> CreateDoctor([FromBody] DoctorModel.Request request) //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //frombody es para decir recupera los datos del body
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber))
-                {
-                    throw new ValidationException("Nombre y matrícula son requeridos.");
-                }
 
-                var speciality = _persistence.GetSpecialityById(request.SpecialityId);
-                if (speciality == null)
-                {
-                    throw new ValidationException("Especialidad no existe.");
-                }
-
-                _persistence.InsertarDoctor(request.Name, request.LicenseNumber, speciality);
-                return Created(string.Empty, "Doctor creado exitosamente."); //retorna un codigo 201
-            }
-            catch(ValidationException ex)
+            if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber))
             {
-                return BadRequest(ex.Message);
+                throw new ValidationException("Nombre y matrícula son requeridos.");
             }
+
+            var speciality = _persistence.GetSpecialityById(request.SpecialityId);
+            if (speciality == null)
+            {
+                throw new ValidationException("Especialidad no existe.");
+            }
+
+            _persistence.InsertarDoctor(request.Name, request.LicenseNumber, speciality);
+            return Created(string.Empty, "Doctor creado exitosamente."); //retorna un codigo 201
+            
         }
 
         [HttpGet] //indica que este método se ejecutará cuando se realice una solicitud HTTP GET a la ruta "/Doctor/GetDoctor"
@@ -54,8 +49,6 @@ namespace Dsw2026Ej15.Controllers
         [HttpGet("{id}")] //indica que este método se ejecutará cuando se realice una solicitud HTTP GET a la ruta "/Doctor/GetDoctor"
         public async Task<IActionResult> GetDoctorActiveById([FromRoute] Guid id) //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //fromquery es para decir recupera los datos de la query string
         {
-            try
-            {
                 var doctor = _persistence.GetDoctorActiveById(id);
 
                 if (doctor == null)
@@ -68,18 +61,13 @@ namespace Dsw2026Ej15.Controllers
                 }
 
                 return Ok(new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name));
-            }
-            catch (ValidationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+           
         }
 
         [HttpDelete("{id}")] //indica que este método se ejecutará cuando se realice una solicitud HTTP DELETE a la ruta "/Doctor/GetDoctor"
         public async Task<IActionResult> BajaLogicaDoctorById([FromRoute] Guid id) //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //fromquery es para decir recupera los datos de la query string
         {
-            try
-            {
+           
                 var doctor = _persistence.GetDoctorActiveById(id);
                 if (doctor == null)
                 {
@@ -93,11 +81,7 @@ namespace Dsw2026Ej15.Controllers
                 var doctor1 = _persistence.BajaLogicaDoctorById(id);
 
                 return NoContent();
-            }
-            catch(ValidationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+          
         }
     }
 }
