@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Dsw2026Ej15.Domain.Entities
 {
@@ -8,15 +9,32 @@ namespace Dsw2026Ej15.Domain.Entities
     {
         public string Name { get; init; }
         public string LicenseNumber { get; init; }
-        public bool IsActive { get; set; }
-        public Speciality Speciality { get; private set; }
+        [JsonInclude]
+        public bool IsActive { get; private set; } = true;
+        public Guid SpecialityId { get; init; } //EFCORE infiere que esto es la FK de Speciality, y que la propiedad Speciality es la navegación a la entidad relacionada
+        public Speciality Speciality { get; init; }
 
+
+        public Doctor() { }
+
+        public Doctor(Guid id,string name, string licenseNumber, Speciality speciality) : base(id)
+        {
+            Name = name;
+            LicenseNumber = licenseNumber;
+            Speciality = speciality;
+            IsActive = true;
+        }
         public Doctor(string name, string licenseNumber, Speciality speciality, Guid? id = null) : base(id)
         {
             Name = name;
             LicenseNumber = licenseNumber;
             Speciality = speciality;
             IsActive = true;
+        }
+
+        public void Desactivate()
+        {
+            IsActive = false;
         }
     }
 }
