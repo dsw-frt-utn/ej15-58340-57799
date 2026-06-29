@@ -28,13 +28,14 @@ namespace Dsw2026Ej15.Controllers
                 throw new ValidationException("Nombre y matrícula son requeridos.");
             }
 
-            var speciality = _persistence.GetSpecialityById(request.SpecialityId);
+            var speciality = await _persistence.GetSpecialityById(request.SpecialityId);
+
             if (speciality == null)
             {
                 throw new ValidationException("Especialidad no existe.");
             }
 
-            _persistence.InsertarDoctor(request.Name, request.LicenseNumber, speciality);
+            await _persistence.InsertarDoctor(request.Name, request.LicenseNumber, speciality);
             return Created(string.Empty, "Doctor creado exitosamente."); //retorna un codigo 201
             
         }
@@ -42,14 +43,14 @@ namespace Dsw2026Ej15.Controllers
         [HttpGet] //indica que este método se ejecutará cuando se realice una solicitud HTTP GET a la ruta "/Doctor/GetDoctor"
         public async Task<IActionResult> GetDoctorsActive() //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //fromquery es para decir recupera los datos de la query string
         {
-            var doctors = _persistence.GetDoctorsActive();
+            var doctors = await _persistence.GetDoctorsActive();
             return Ok(doctors);
         }
 
         [HttpGet("{id}")] //indica que este método se ejecutará cuando se realice una solicitud HTTP GET a la ruta "/Doctor/GetDoctor"
         public async Task<IActionResult> GetDoctorActiveById([FromRoute] Guid id) //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //fromquery es para decir recupera los datos de la query string
         {
-                var doctor = _persistence.GetDoctorActiveById(id);
+                var doctor = await _persistence.GetDoctorActiveById(id);
 
                 if (doctor == null)
                 {
@@ -68,7 +69,7 @@ namespace Dsw2026Ej15.Controllers
         public async Task<IActionResult> BajaLogicaDoctorById([FromRoute] Guid id) //IActionResult es una interfaz que representa el resultado de una acción en un controlador, como devolver una vista, redirigir a otra acción, etc. //fromquery es para decir recupera los datos de la query string
         {
            
-                var doctor = _persistence.GetDoctorActiveById(id);
+                var doctor = await _persistence.GetDoctorActiveById(id);
                 if (doctor == null)
                 {
                     throw new ValidationException("Doctor no encontrado.");
@@ -78,7 +79,7 @@ namespace Dsw2026Ej15.Controllers
                     throw new ValidationException("El Doctor no está activo.");
                 }
 
-                var doctor1 = _persistence.BajaLogicaDoctorById(id);
+                await _persistence.BajaLogicaDoctorById(id);
 
                 return NoContent();
           
