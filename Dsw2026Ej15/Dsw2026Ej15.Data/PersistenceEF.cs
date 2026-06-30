@@ -55,7 +55,7 @@ namespace Dsw2026Ej15.Data
         public async Task InsertarDoctor(string name, string licenseNumber, Speciality speciality)
         {
             _context.Doctors.Add(new Doctor(name, licenseNumber, speciality));
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public void InitializeData()
